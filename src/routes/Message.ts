@@ -7,10 +7,12 @@ import {
   createMessage,
   getMessage,
   getPendingCount,
+  sendMessages,
 } from "../controllers/Message";
 
 // Middlewares
 import { verifyToken } from "../middleware/authentication";
+import { verifyTokenAdmin } from "../middleware/authenticationadmin";
 
 const router = Router();
 
@@ -27,7 +29,7 @@ router.post(
 );
 
 router.get("/display/:id", param("id").isMongoId(), getMessage);
-
-router.get("/pending", getPendingCount);
+router.get("/pending", verifyTokenAdmin, getPendingCount);
+router.post("/send", verifyTokenAdmin, sendMessages);
 
 export default router;

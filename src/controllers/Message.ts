@@ -4,6 +4,8 @@ import { validationResult } from "express-validator";
 import Message from "../models/Message";
 import User from "../models/User";
 
+import { sendMessage } from "../libs/sendgrid";
+
 export const createMessage: RequestHandler = async (req, res) => {
   try {
     // Validate request data
@@ -77,6 +79,35 @@ export const getPendingCount: RequestHandler = async (req, res) => {
     return res.send({
       success: true,
       pendingMessages,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Algo salió mal. Inténtalo de nuevo más tarde.",
+    });
+  }
+};
+
+export const sendMessages: RequestHandler = async (req, res) => {
+  try {
+    const today = new Date();
+    const pendingMessages = await Message.find()
+      .and([
+        {
+          sendingDate: { $lte: today },
+        },
+        {
+          isSent: false,
+        },
+      ])
+      .limit(100);
+
+    pendingMessages.forEach(async (msg) => {
+      await sendMessage(msg.destinatary, msg._id.toString());
+    });
+
+    res.json({
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({
