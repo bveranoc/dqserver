@@ -58,7 +58,7 @@ export const getMessage: RequestHandler = async (req, res) => {
     const id = req.params.id;
     const message = await Message.findById(id);
 
-    if (!message || !message.isSent) {
+    if (!message) {
       return res
         .status(404)
         .json({ success: false, message: "Mensaje no encontrado." });
@@ -75,7 +75,16 @@ export const getMessage: RequestHandler = async (req, res) => {
 
 export const getPendingCount: RequestHandler = async (req, res) => {
   try {
-    const pendingMessages = await Message.count({ isSent: false });
+    const today = new Date();
+    const pendingMessages = await Message.count().and([
+      {
+        sendingDate: { $lte: today },
+      },
+      {
+        isSent: false,
+      },
+    ]);
+
     return res.send({
       success: true,
       pendingMessages,
@@ -102,9 +111,17 @@ export const sendMessages: RequestHandler = async (req, res) => {
       ])
       .limit(100);
 
+    // Send Messages
     pendingMessages.forEach(async (msg) => {
       await sendMessage(msg.destinatary, msg._id.toString());
     });
+
+    // Update status
+    const idList = pendingMessages.map((msg) => msg._id.toString());
+    await Message.updateMany(
+      { _id: { $in: idList } },
+      { $set: { isSent: true } }
+    );
 
     res.json({
       success: true,
