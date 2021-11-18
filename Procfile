@@ -1,0 +1,1 @@
+web: ts-node --files src/index.ts

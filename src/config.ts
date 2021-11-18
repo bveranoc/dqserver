@@ -2,10 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default {
-  MONGO_DATABASE: process.env.MONGO_DATABASE || "decirteque",
-  MONGO_USER: process.env.MONGO_USER || "admin",
-  MONGO_PASSWORD: process.env.MONGO_PASSWORD || "12345",
-  MONGO_HOST: process.env.MONGO_HOST || "localhost",
+  MONGO_URI: process.env.MONGO_URI || "mongodb://localhost:27017/decirteque",
   PORT: process.env.PORT || 8000,
   JWT_SECRET: process.env.JWT_SECRET || "decirteque",
   SENDGRID_KEY: process.env.SENDGRID_KEY || "",
