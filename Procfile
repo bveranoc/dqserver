@@ -1,1 +1,1 @@
-web: ts-node --files src/index.ts
+web: node dist/index.js
