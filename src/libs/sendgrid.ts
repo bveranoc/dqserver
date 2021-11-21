@@ -6,7 +6,10 @@ sgMail.setApiKey(config.SENDGRID_KEY);
 export const sendMessage = async (to: string, messageid: string) => {
   const msg = {
     to,
-    from: config.SENDGRID_SENDER,
+    from: {
+      email: config.SENDGRID_SENDER,
+      name: "Decirte Que",
+    },
     templateId: config.SENDGRID_TEMPLATEID,
     dynamicTemplateData: {
       buttonUrl: `${config.WEB_URL}/message/${messageid}`,
