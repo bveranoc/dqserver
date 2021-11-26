@@ -113,7 +113,11 @@ export const sendMessages: RequestHandler = async (req, res) => {
 
     // Send Messages
     pendingMessages.forEach(async (msg) => {
-      await sendMessage(msg.destinatary, msg._id.toString());
+      await sendMessage(
+        msg.destinatary,
+        msg._id.toString(),
+        msg.isAnonymus ? null : msg.sender
+      );
     });
 
     // Update status
