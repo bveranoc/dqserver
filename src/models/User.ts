@@ -5,7 +5,7 @@ const userSchema = new Schema(
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, unique: true },
-    availableMessages: { type: Number, required: true, default: 5 },
+    availableMessages: { type: Number, required: true, default: 1000 },
     socialProvider: {
       type: String,
       required: true,
