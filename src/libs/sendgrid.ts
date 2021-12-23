@@ -20,6 +20,7 @@ export const sendMessage = async (
       subject: sender
         ? `${sender} tiene algo que decirte...`
         : "Tienes un mensaje anónimo.",
+      sender: sender ? sender : "Alguien",
     },
   };
 
